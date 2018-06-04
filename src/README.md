@@ -28,6 +28,7 @@ For the tables below, you could apply `-k` or `--key` flag to specify a certain 
 
 ```bash
 $ cleos get table eosio eosio accounts
+
 $ cleos get table eosio eosio accounts --key account_name
 ```
 
@@ -93,21 +94,6 @@ $ cleos get table eosio user1 votes
 ```
 
 </details>
-
-```bash
-$ cleos get table eosio user1 votes
-{
-  "rows": [{
-      "bpname": "biosbpa",
-      "staked": "100.0000 EOS",
-      "stake_time": "2018-06-04T05:12:42",
-      "unstaking": "0.0000 EOS",
-      "unstake_time": "2018-06-04T05:12:42"
-    }
-  ],
-  "more": false
-}
-```
 
 #### bps
 
@@ -273,7 +259,7 @@ parameters:
 - `commission_rate`
 
 ```bash
-$ cleos push action eosio updatebp '{"bpname":"bp_name","block_signing_key":"block_signing_key","commission_rate":"commission_rate"}' -p bpname
+$ cleos push action eosio updatebp '{"bpname":"bpname","block_signing_key":"block_signing_key","commission_rate":"commission_rate"}' -p bpname
 ```
 
 <details>
@@ -298,7 +284,7 @@ parameters:
 - `change`: amount `voter` wants to vote `bpname`, `change` can be negative, e.g., `-10.0000 EOS`, which means to redeem the previous votes.
 
 ```bash
-$ cleos  push action eosio vote '{"voter":"account_name","bpname":"bp_name","change":"quantity"}' -p account_name
+$ cleos  push action eosio vote '{"voter":"voter","bpname":"bpname","change":"change"}' -p voter
 ```
 
 <details>
@@ -345,7 +331,7 @@ parameters:
 - `bpname`: bp name
 
 ```bash
-$ cleos  push action eosio unfreeze '{"voter":"account_name","bpname":"bp_name"}' -p account_name
+$ cleos  push action eosio unfreeze '{"voter":"voter","bpname":"bpname"}' -p voter
 ```
 
 <details>
@@ -392,7 +378,7 @@ parameters:
 - `bpname`: bp name
 
 ```bash
-$ cleos push action eosio claim '{"voter":"account_name","bpname":"bp_name"}' -p account_name
+$ cleos push action eosio claim '{"voter":"voter","bpname":"bpname"}' -p voter
 ```
 
 <details>
@@ -464,7 +450,7 @@ parameters:
 - `emergency`: `true` or `false`
 
 ```bash
-$ cleos push action eosio setemergency '{"bpname":"bp_name","emergency":true}' -p bp_name
+$ cleos push action eosio setemergency '{"bpname":"bpname","emergency":emergency}' -p bpname
 ```
 
 <details>
