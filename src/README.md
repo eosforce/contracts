@@ -15,7 +15,6 @@
         * [unfreeeze](#unfreeeze)
         * [claim](#claim)
         * [setemergency](#setemergency)
-* [License](#license)
 
 <!-- vim-markdown-toc -->
 
