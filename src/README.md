@@ -307,7 +307,7 @@ $ cleos push action eosio vote '{"voter":"user1","bpname":"biosbpa","change":"-1
 executed transaction: 5530a811faf1b895efa024074bc4fecdeccb10e30da66056f38122001473e77b  144 bytes  7360 us
 #         eosio <= eosio::vote                  {"voter":"user1","bpname":"biosbpa","change":"-10.0000 EOS"}
 warning: transaction executed locally, but may not be confirmed by the network yet
-chain@ubuntu:~/workcode$ ./cleos get table eosio user1 votes
+$ cleos get table eosio user1 votes
 {
   "rows": [{
       "bpname": "biosbpa",
@@ -354,7 +354,7 @@ $ cleos  push action eosio unfreeze '{"voter":"user1","bpname":"biosbpa"}' -p us
 executed transaction: 337057640aafeba1306c44f9222a32e2b290e72cd56f828c07d7f73aed54fc76  128 bytes  5772 us
 #         eosio <= eosio::unfreeze              {"voter":"user1","bpname":"biosbpa"}
 warning: transaction executed locally, but may not be confirmed by the network yet
-chain@ubuntu:~/workcode$ ./cleos get table eosio user1 votes
+$ cleos get table eosio user1 votes
 {
   "rows": [{
       "bpname": "biosbpa",

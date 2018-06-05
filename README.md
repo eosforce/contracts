@@ -20,6 +20,8 @@
 
 <!-- vim-markdown-toc -->
 
+[English Version](README_en.md)
+
 ## 引言
 
 EOS Force 是基于 [EOSIO 软件](https://github.com/EOSIO/eos) 并加以进化的区块链。
