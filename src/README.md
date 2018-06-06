@@ -281,40 +281,29 @@ parameters:
 
 - `voter`: account name
 - `bpname`: bp name
-- `change`: amount `voter` wants to vote `bpname`, `change` can be negative, e.g., `-10.0000 EOS`, which means to redeem the previous votes.
+- `stake`: amount `voter` wants to vote `bpname`, `stake` can be negative, e.g., `-10.0000 EOS`, which means to redeem the previous votes.
 
 ```bash
-$ cleos  push action eosio vote '{"voter":"voter","bpname":"bpname","change":"change"}' -p voter
+$ cleos push action eosio vote '{"voter":"voter","bpname":"bpname","stake":"stake"}' -p voter
 ```
 
 <details>
 <summary>Example</summary>
 
 ```bash
-$ cleos get table eosio user1 votes
-{
-  "rows": [{
-      "bpname": "biosbpa",
-      "staked": "100.0000 EOS",
-      "stake_time": "2018-06-04T05:12:42",
-      "unstaking": "0.0000 EOS",
-      "unstake_time": "2018-06-04T05:12:42"
-    }
-  ],
-  "more": false
-}
-$ cleos push action eosio vote '{"voter":"user1","bpname":"biosbpa","change":"-10.0000 EOS"}' -p user1
-executed transaction: 5530a811faf1b895efa024074bc4fecdeccb10e30da66056f38122001473e77b  144 bytes  7360 us
-#         eosio <= eosio::vote                  {"voter":"user1","bpname":"biosbpa","change":"-10.0000 EOS"}
+$ cleos push action eosio vote '{"voter":"biosbpb","bpname":"biosbpa","stake":"10.0000 EOS"}' -p biosbpb
+executed transaction: f91df3ed914d06953190bf0c5186c0519383af5eb76fbdd3248499afd41afe20  144 bytes  6820 us
+#         eosio <= eosio::vote                  {"voter":"biosbpb","bpname":"biosbpa","stake":"10.0000 EOS"}
 warning: transaction executed locally, but may not be confirmed by the network yet
-$ cleos get table eosio user1 votes
+$ cleos get table eosio biosbpb votes
 {
   "rows": [{
       "bpname": "biosbpa",
-      "staked": "90.0000 EOS",
-      "stake_time": "2018-06-04T05:22:06",
-      "unstaking": "10.0000 EOS",
-      "unstake_time": "2018-06-04T05:22:06"
+      "staked": "10.0000 EOS",
+      "voteage": "125700000000",
+      "voteage_update_time": "2018-06-06T10:18:39",
+      "unstaking": "99999990.0000 EOS",
+      "unstake_time": "2018-06-06T10:18:39"
     }
   ],
   "more": false
