@@ -256,7 +256,7 @@ parameters:
 
 - `bpname`: bp name
 - `block_signing_key`: EOS public key
-- `commission_rate`
+- `commission_rate`: the valid range is 0~10000, meaning 0%~100%
 
 ```bash
 $ cleos push action eosio updatebp '{"bpname":"bpname","block_signing_key":"block_signing_key","commission_rate":"commission_rate"}' -p bpname
@@ -281,7 +281,7 @@ parameters:
 
 - `voter`: account name
 - `bpname`: bp name
-- `stake`: amount `voter` wants to vote `bpname`, `stake` can be negative, e.g., `-10.0000 EOS`, which means to redeem the previous votes.
+- `stake`: amount `voter` wants to vote `bpname`
 
 ```bash
 $ cleos push action eosio vote '{"voter":"voter","bpname":"bpname","stake":"stake"}' -p voter
