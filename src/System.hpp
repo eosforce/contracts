@@ -43,12 +43,13 @@ private:
   struct vote_info {
     account_name   bpname;
     asset          staked = asset(0,SYMBOL);
-    time           stake_time = now();
+    time           voteage_update_time = now();
+    int64_t        voteage = 0; // asset.amount * time.seconds
     asset          unstaking = asset(0,SYMBOL);
     time           unstake_time = now();
 
     uint64_t        primary_key() const { return bpname; }
-    EOSLIB_SERIALIZE( vote_info, (bpname) (staked) (stake_time) (unstaking) (unstake_time) )
+    EOSLIB_SERIALIZE( vote_info, (bpname) (staked) (voteage) (voteage_update_time) (unstaking) (unstake_time) )
   };
 
   struct bp_info {
@@ -91,8 +92,6 @@ private:
 
   void update_elected_bps();
 
-  bool check_emergency();
-
 public:
   // @abi action
   void transfer(const account_name from, const account_name to, const asset quantity, const string /*memo*/);
@@ -101,7 +100,7 @@ public:
   void updatebp(const account_name bpname, const public_key producer_key, const uint32_t commission_rate);
 
   // @abi action
-  void vote(const account_name voter, const account_name bpname, const asset change);
+  void vote(const account_name voter, const account_name bpname, const asset stake);
 
   // @abi action
   void unfreeze(const account_name voter, const account_name bpname);

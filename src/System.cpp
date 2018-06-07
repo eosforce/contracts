@@ -30,9 +30,6 @@ void system_contract::update_elected_bps() {
 }
 
 void system_contract::transfer(const account_name from, const account_name to, const asset quantity, const string /*memo*/) {
-  //check emergency
-  eosio_assert(check_emergency() == false,"chain is in emergency now !");
-
   //assert from
   require_auth(from);
   accounts_table acnts_tbl(_self, _self);
@@ -56,9 +53,6 @@ void system_contract::transfer(const account_name from, const account_name to, c
 }
 
 void system_contract::updatebp(const account_name bpname, const public_key block_signing_key, const uint32_t commission_rate) {
-  //check emergency
-  eosio_assert(check_emergency() == false,"chain is in emergency now !");
-
   //assert bpname
   require_auth(bpname);
 
@@ -79,10 +73,7 @@ void system_contract::updatebp(const account_name bpname, const public_key block
   }
 }
 
-void system_contract::vote(const account_name voter, const account_name bpname, const asset change) {
-  //check emergency
-  eosio_assert(check_emergency() == false,"chain is in emergency now !");
-
+void system_contract::vote(const account_name voter, const account_name bpname, const asset stake) {
   //assert voter
   require_auth(voter);
   accounts_table acnts_tbl(_self, _self);
@@ -92,52 +83,34 @@ void system_contract::vote(const account_name voter, const account_name bpname, 
   bps_table bps_tbl(_self, _self);
   const auto & bp  = bps_tbl.get(bpname, "bpname is not registered");
 
-  //assert change
-  eosio_assert(change.symbol == SYMBOL, "only support EOS");
-  eosio_assert(change.amount != 0, "need change != 0");
-  //act.available is already handling fee
-  eosio_assert(change.amount <= act.available.amount,"need < your available balance");
+  //assert stake
+  eosio_assert(stake.symbol == SYMBOL, "only support EOS");
+  eosio_assert(0 <= stake.amount,"need 0 <= stake");
 
-  asset reward = asset(0,SYMBOL);
+  asset change = asset(0,SYMBOL);
   votes_table votes_tbl(_self, voter);
   auto vts = votes_tbl.find(bpname);
   if((vts == votes_tbl.end())){
-    eosio_assert(change.amount > 0,"need change > 0");
-
-    bps_tbl.modify(bp, 0, [&](bp_info &b) {
-      b.total_voteage += b.total_staked.amount * (now() - b.voteage_update_time);
-      b.voteage_update_time = now();
-      b.total_staked += change;
-    });
+    change = stake;
+    //act.available is already handling fee
+    eosio_assert(stake.amount <= act.available.amount,"stake need < your available balance");
 
     votes_tbl.emplace(voter,[&](vote_info & v) {
       v.bpname = bpname;
-      v.staked.set_amount(change.amount);
+      v.staked = stake;
     });
   } else {
-    eosio_assert(change.amount >= -vts->staked.amount,"need >= -(your staked balance)");
-
-    //calculate reward
-    int64_t vote_age = vts->staked.amount * (now() - vts->stake_time);
-    int64_t delta_age = bp.total_staked.amount * (now() - bp.voteage_update_time);
-    if(bp.total_voteage + delta_age > 0){
-      reward.set_amount(bp.rewards_pool.amount * vote_age / (bp.total_voteage + delta_age));
-    }
-
-    //update bps_tbl
-    bps_tbl.modify(bp, 0, [&](bp_info & b) {
-      b.rewards_pool -= reward;
-      b.total_voteage += delta_age - vote_age;
-      b.voteage_update_time = now();
-      b.total_staked += change;
-    });
+    change = stake - vts->staked;
+    //act.available is already handling fee
+    eosio_assert(change.amount <= act.available.amount, "stake change need < your available balance");
 
     votes_tbl.modify(vts, 0, [&](vote_info & v) {
-      v.staked += change;
-      v.stake_time = now();
+      v.voteage += v.staked.amount / 10000 * (now() - v.voteage_update_time);
+      v.voteage_update_time = now();
+      v.staked = stake;
       //unstake
       if(change.amount < 0){
-        v.unstaking -= change;
+        v.unstaking += -change;
         v.unstake_time = now();
       }
     });
@@ -145,19 +118,19 @@ void system_contract::vote(const account_name voter, const account_name bpname, 
 
   if(change.amount > 0){
     acnts_tbl.modify(act, 0, [&](account_info & a) {
-      a.available += reward - change;
-    });
-  } else {
-    acnts_tbl.modify(act, 0, [&](account_info & a) {
-      a.available += reward;
+      a.available -= change;
     });
   }
+
+  //update bps_tbl
+  bps_tbl.modify(bp, 0, [&](bp_info & b) {
+    b.total_voteage += b.total_staked.amount / 10000 * (now() - b.voteage_update_time);
+    b.voteage_update_time = now();
+    b.total_staked += change;
+  });
 }
 
 void system_contract::unfreeze(const account_name voter, const account_name bpname){
-  //check emergency
-  eosio_assert(check_emergency() == false,"chain is in emergency now !");
-
   //assert voter
   require_auth(voter);
   accounts_table acnts_tbl(_self, _self);
@@ -181,9 +154,6 @@ void system_contract::unfreeze(const account_name voter, const account_name bpna
 }
 
 void system_contract::claim(const account_name voter, const account_name bpname){
-  //check emergency
-  eosio_assert(check_emergency() == false,"chain is in emergency now !");
-
   //assert voter
   require_auth(voter);
   accounts_table acnts_tbl(_self, _self);
@@ -198,29 +168,31 @@ void system_contract::claim(const account_name voter, const account_name bpname)
   const auto & vts = votes_tbl.get(bpname, "voter have not add votes to the the producer yet");
 
   //calculate reward
-  int64_t vote_age = vts.staked.amount * (now() - vts.stake_time);
-  int64_t delta_age = bp.total_staked.amount * (now() - bp.voteage_update_time);
-  eosio_assert(bp.total_voteage + delta_age > 0, "claim is not available yet");
-  asset reward = asset(static_cast<int64_t>(bp.rewards_pool.amount * vote_age / (bp.total_voteage + delta_age)),SYMBOL);
+  int64_t newest_voteage = vts.voteage + vts.staked.amount / 10000 * (now() - vts.voteage_update_time);
+  int64_t newest_total_voteage = bp.total_voteage + bp.total_staked.amount / 10000 * (now() - bp.voteage_update_time);
+  eosio_assert(newest_total_voteage > 0, "claim is not available yet");
+
+  int128_t amount_voteage = (int128_t)bp.rewards_pool.amount * (int128_t)newest_voteage;
+  asset reward = asset(static_cast<int64_t>((int128_t)amount_voteage / (int128_t)(newest_total_voteage)),SYMBOL) ;
 
   //add reward to balance
   acnts_tbl.modify(act, 0, [&](account_info & a) {
-    print("--claim--reward----",reward,"\n");
+    print("--claim--reward----", reward,"\n");
     a.available += reward;
   });
 
   //update votes_tbl
   votes_tbl.modify(vts, 0, [&](vote_info & v) {
-    v.stake_time = now();
+    v.voteage = 0;
+    v.voteage_update_time = now();
   });
 
   //update bps_tbl
   bps_tbl.modify(bp, 0, [&](bp_info & b) {
     b.rewards_pool -= reward;
-    b.total_voteage += delta_age - vote_age;
+    b.total_voteage = newest_total_voteage - newest_voteage;
     b.voteage_update_time = now();
   });
-
 }
 
 void system_contract::onblock(const block_timestamp, const account_name bpname, const uint16_t, const block_id_type previous) {
@@ -308,15 +280,6 @@ void system_contract::setemergency(const account_name bpname, const bool emergen
   cstatus_tbl.modify(cstatus, 0, [&](chain_status & cs) {
     cs.emergency = proposal > num_of_top_bps * 2 / 3;
   });
-
-}
-
-bool system_contract::check_emergency() {
-  //assert chainstatus
-  cstatus_table cstatus_tbl(_self, _self);
-  const auto & cstatus = cstatus_tbl.get(N(chainstatus),"get chainstatus fatal");
-
-  return cstatus.emergency;
 }
 
 }
