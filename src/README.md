@@ -225,6 +225,20 @@ $ cleos get table eosio eosio chainstatus
 
 ### Action
 
+Each action has a cost:
+
+Action       | Transaction Fee (EOS)
+:----:       | :----:
+newaccount    |0.1
+transfer     | 0.01
+updatebp     | 100
+vote         | 0.01  
+unfreeze     | 0.01
+claim        | 0.01
+setemergency | 10
+create       | 10
+issue        | 0.01
+
 #### transfer
 
 parameters:
