@@ -4,17 +4,26 @@
 
 * [Command Reference](#command-reference)
     * [Table](#table)
-        * [accounts](#accounts)
-        * [votes](#votes)
-        * [bps](#bps)
-        * [chainstatus](#chainstatus)
+        * [eosio](#eosio)
+            * [accounts](#accounts)
+            * [votes](#votes)
+            * [bps](#bps)
+            * [chainstatus](#chainstatus)
+        * [eosio.token](#eosiotoken)
+            * [accounts](#accounts-1)
+            * [stat](#stat)
     * [Action](#action)
-        * [transfer](#transfer)
-        * [updatebp](#updatebp)
-        * [vote](#vote)
-        * [unfreeeze](#unfreeeze)
-        * [claim](#claim)
-        * [setemergency](#setemergency)
+        * [eosio](#eosio-1)
+            * [transfer](#transfer)
+            * [updatebp](#updatebp)
+            * [vote](#vote)
+            * [unfreeeze](#unfreeeze)
+            * [claim](#claim)
+            * [setemergency](#setemergency)
+        * [eosio.token](#eosiotoken-1)
+            * [create](#create)
+            * [issue](#issue)
+            * [transfer](#transfer-1)
 
 <!-- vim-markdown-toc -->
 
@@ -24,11 +33,14 @@
 
 For the tables below, you could apply `-k` or `--key` flag to specify a certain row if you do not want to receive all the records in the table.
 
-#### accounts
+#### eosio
+
+##### accounts
 
 ```bash
 $ cleos get table eosio eosio accounts
 
+# Get coin balance
 $ cleos get table eosio eosio accounts --key account_name
 ```
 
@@ -67,7 +79,7 @@ $ cleos get table eosio eosio accounts
 
 </details>
 
-#### votes
+##### votes
 
 ```bash
 $ cleos get table eosio account_name votes
@@ -95,7 +107,7 @@ $ cleos get table eosio user1 votes
 
 </details>
 
-#### bps
+##### bps
 
 ```bash
 $ cleos get table eosio eosio bps
@@ -198,7 +210,7 @@ $ cleos get table eosio eosio bps
 
 </details>
 
-#### chainstatus
+##### chainstatus
 
 ```bash
 $ cleos get table eosio eosio chainstatus
@@ -223,23 +235,69 @@ $ cleos get table eosio eosio chainstatus
 
 </details>
 
+#### eosio.token
+
+##### accounts
+
+```bash
+# get token balance
+$ cleos get table eosio.token account_name accounts
+```
+
+<details>
+<summary>Example</summary>
+
+```bash
+$ cleos get table eosio.token user1 accounts
+{
+  "rows": [{
+      "balance": "5.0000 PP"
+    }
+  ],
+  "more": false
+}
+```
+
+##### stat
+
+```bash
+$ cleos get table eosio.token token_name stat
+```
+
+```bash
+# given that a token called EOP has been created
+$ cleos get table eosio.token EOP stat
+{
+  "rows": [{
+      "supply": "5.0000 EOP",
+      "max_supply": "100.0000 EOP",
+      "issuer": "user1"
+    }
+  ],
+  "more": false
+}
+```
+
+
 ### Action
 
 Each action has a cost:
 
-Action       | Transaction Fee (EOS)
-:----:       | :----:
-newaccount    |0.1
-transfer     | 0.01
-updatebp     | 100
-vote         | 0.01  
-unfreeze     | 0.01
-claim        | 0.01
-setemergency | 10
-create       | 10
-issue        | 0.01
+Contract           | Action       | Transaction Fee (EOS)
+:----:             | :----:       | :----:
+eosio              | newaccount   | 0.1
+eosio              | updatebp     | 100
+eosio              | vote         | 0.01
+eosio              | unfreeze     | 0.01
+eosio              | claim        | 0.01
+eosio              | setemergency | 10
+eosio, eosio.token | transfer     | 0.01
+eosio.token        | create       | 10
+eosio.token        | issue        | 0.01
 
-#### transfer
+#### eosio
+
+##### transfer
 
 parameters:
 
@@ -264,7 +322,7 @@ warning: transaction executed locally, but may not be confirmed by the network y
 
 </details>
 
-#### updatebp
+##### updatebp
 
 parameters:
 
@@ -289,7 +347,7 @@ warning: transaction executed locally, but may not be confirmed by the network y
 </details>
 
 
-#### vote
+##### vote
 
 parameters:
 
@@ -326,7 +384,7 @@ $ cleos get table eosio biosbpb votes
 
 </details>
 
-#### unfreeeze
+##### unfreeeze
 
 parameters:
 
@@ -373,7 +431,7 @@ $ cleos get table eosio user1 votes
 
 </details>
 
-#### claim
+##### claim
 
 parameters:
 
@@ -445,7 +503,7 @@ $ cleos get table eosio eosio accounts -k user1
 
 </details>
 
-#### setemergency
+##### setemergency
 
 parameters:
 
@@ -483,3 +541,81 @@ $ cleos get table eosio eosio bps -k biosbpa
 ```
 
 </details>
+
+#### eosio.token
+
+##### create
+
+parameters:
+
+- `creator`: account_name
+- `token`:
+
+```bash
+$ cleos push action eosio.token create '["creator","max_supply token_symbol"]' -p creator
+```
+
+```bash
+$ cleos push action eosio.token create '["user1","100.0000 EOP"]' -p biosbpa
+executed transaction: b73d9a923c156828273109b2e1754c201ce01d7987ae4eca789e1580fcf64d14  136 bytes  2455 us
+#   eosio.token <= eosio.token::create          {"issuer":"user1","maximum_supply":"100.0000 EOP"}
+
+$ cleos get table eosio.token EOP stat
+{
+  "rows": [{
+      "supply": "0.0000 EOP",
+      "max_supply": "100.0000 EOP",
+      "issuer": "user1"
+    }
+  ],
+  "more": false
+}
+```
+
+##### issue
+
+parameters:
+
+- `to`
+- `quantity`
+- `memo`
+
+```bash
+$ cleos push action eosio.token issue '["to", "quantity", "memo"]' -p account
+```
+
+```bash
+$ cleos push action eosio.token issue '["user1","5.0000 EOP","issue to user1"]' -p user1
+executed transaction: e0d956a867ca4adb1d02455cf50b5f95b1ea02d32a538ee1fb110bbbe7bcbcdd  136 bytes  3048 us
+#   eosio.token <= eosio.token::issue           {"to":"user1","quantity":"5.0000 EOP","memo":"issue to user1"}
+
+$ cleos get table eosio.token user1 accounts
+{
+  "rows": [{
+      "balance": "5.0000 EOP"
+    }
+  ],
+  "more": false
+}
+```
+
+##### transfer
+
+parameters:
+
+- `from`
+- `to`
+- `quantity`
+- `memo`
+
+```bash
+$ cleos push action eosio transfer '["from", "to", "quantity", "memo"]' -p from
+```
+
+```bash
+$ cleos push action eosio.token transfer '["user1","user2","2.0000 EOP","memo"]' -p user1
+executed transaction: b0f47409fad8f44ff31a1632bf90fda529d0e3e1e5396eef85d7fedf74999ffa  144 bytes  2706 us
+#   eosio.token <= eosio.token::transfer        {"from":"user1","to":"user2","quantity":"2.0000 EOP","memo":"memo"}
+#         user1 <= eosio.token::transfer        {"from":"user1","to":"user2","quantity":"2.0000 EOP","memo":"memo"}
+#         user2 <= eosio.token::transfer        {"from":"user1","to":"user2","quantity":"2.0000 EOP","memo":"memo"}
+```
