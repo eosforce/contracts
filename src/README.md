@@ -257,12 +257,16 @@ $ cleos get table eosio.token user1 accounts
   "more": false
 }
 ```
+</details>
 
 ##### stat
 
 ```bash
 $ cleos get table eosio.token token_name stat
 ```
+
+<details>
+<summary>Example</summary>
 
 ```bash
 # given that a token called EOP has been created
@@ -277,7 +281,7 @@ $ cleos get table eosio.token EOP stat
   "more": false
 }
 ```
-
+</details>
 
 ### Action
 
@@ -307,7 +311,7 @@ parameters:
 - `memo`
 
 ```bash
-$ cleos   push action eosio transfer '{"from":"from","to":"to","quantity":"quantity","memo":"memo"}' -p from
+$ cleos push action eosio transfer '{"from":"from","to":"to","quantity":"quantity","memo":"memo"}' -p from
 ```
 
 <details>
@@ -555,6 +559,9 @@ parameters:
 $ cleos push action eosio.token create '["creator","max_supply token_symbol"]' -p creator
 ```
 
+<details>
+<summary>Example</summary>
+
 ```bash
 $ cleos push action eosio.token create '["user1","100.0000 EOP"]' -p biosbpa
 executed transaction: b73d9a923c156828273109b2e1754c201ce01d7987ae4eca789e1580fcf64d14  136 bytes  2455 us
@@ -571,6 +578,7 @@ $ cleos get table eosio.token EOP stat
   "more": false
 }
 ```
+</details>
 
 ##### issue
 
@@ -581,8 +589,11 @@ parameters:
 - `memo`
 
 ```bash
-$ cleos push action eosio.token issue '["to", "quantity", "memo"]' -p account
+$ cleos push action eosio.token issue '["to", "quantity", "memo"]' -p token
 ```
+
+<details>
+<summary>Example</summary>
 
 ```bash
 $ cleos push action eosio.token issue '["user1","5.0000 EOP","issue to user1"]' -p user1
@@ -598,6 +609,7 @@ $ cleos get table eosio.token user1 accounts
   "more": false
 }
 ```
+</details>
 
 ##### transfer
 
@@ -612,6 +624,9 @@ parameters:
 $ cleos push action eosio transfer '["from", "to", "quantity", "memo"]' -p from
 ```
 
+<details>
+<summary>Example</summary>
+
 ```bash
 $ cleos push action eosio.token transfer '["user1","user2","2.0000 EOP","memo"]' -p user1
 executed transaction: b0f47409fad8f44ff31a1632bf90fda529d0e3e1e5396eef85d7fedf74999ffa  144 bytes  2706 us
@@ -619,3 +634,4 @@ executed transaction: b0f47409fad8f44ff31a1632bf90fda529d0e3e1e5396eef85d7fedf74
 #         user1 <= eosio.token::transfer        {"from":"user1","to":"user2","quantity":"2.0000 EOP","memo":"memo"}
 #         user2 <= eosio.token::transfer        {"from":"user1","to":"user2","quantity":"2.0000 EOP","memo":"memo"}
 ```
+</details>
