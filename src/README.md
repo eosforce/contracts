@@ -9,6 +9,7 @@
             * [votes](#votes)
             * [bps](#bps)
             * [chainstatus](#chainstatus)
+            * [schudles](#schedules)
         * [eosio.token](#eosiotoken)
             * [accounts](#accounts-1)
             * [stat](#stat)
@@ -232,6 +233,99 @@ $ cleos get table eosio eosio chainstatus
   "more": false
 }
 ```
+
+</details>
+
+##### schedules
+
+```bash
+$ cleos get table eosio eosio schedules
+
+$ cleos get table eosio eosio schedules -k version_num
+```
+
+<details>
+<summary>Example</summary>
+$ cleos get table eosio eosio schedules
+{
+  "rows": [{
+      "version": 0,
+      "block_height": 2,
+      "producers": [{
+          "bpname": "biosbpa",
+          "amount": 3
+        },{
+          "bpname": "biosbpb",
+          "amount": 3
+        },{
+          "bpname": "biosbpc",
+          "amount": 3
+        },{
+          "bpname": "biosbpd",
+          "amount": 3
+        },{
+          "bpname": "biosbpe",
+          "amount": 3
+        },{
+          "bpname": "biosbpf",
+          "amount": 3
+        },{
+          "bpname": "biosbpg",
+          "amount": 3
+        },{
+          "bpname": "biosbph",
+          "amount": 2
+        },{
+          "bpname": "biosbpi",
+          "amount": 2
+        },{
+          "bpname": "biosbpj",
+          "amount": 2
+        },{
+          "bpname": "biosbpk",
+          "amount": 2
+        },{
+          "bpname": "biosbpl",
+          "amount": 2
+        },{
+          "bpname": "biosbpm",
+          "amount": 2
+        },{
+          "bpname": "biosbpn",
+          "amount": 2
+        },{
+          "bpname": "biosbpo",
+          "amount": 2
+        },{
+          "bpname": "biosbpp",
+          "amount": 2
+        },{
+          "bpname": "biosbpq",
+          "amount": 2
+        },{
+          "bpname": "biosbpr",
+          "amount": 2
+        },{
+          "bpname": "biosbps",
+          "amount": 2
+        },{
+          "bpname": "biosbpt",
+          "amount": 2
+        },{
+          "bpname": "biosbpu",
+          "amount": 3
+        },{
+          "bpname": "biosbpv",
+          "amount": 3
+        },{
+          "bpname": "biosbpw",
+          "amount": 3
+        }
+      ]
+    }
+  ],
+  "more": false
+}
 
 </details>
 
