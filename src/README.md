@@ -427,16 +427,17 @@ parameters:
 - `bpname`: bp name
 - `block_signing_key`: EOS public key
 - `commission_rate`: the valid range is 0~10000, meaning 0%~100%
+- `url`: BP's website, e.g., `https://eosforce.io`
 
 ```bash
-$ cleos push action eosio updatebp '{"bpname":"bpname","block_signing_key":"block_signing_key","commission_rate":"commission_rate"}' -p bpname
+$ cleos push action eosio updatebp '{"bpname":"bpname","block_signing_key":"block_signing_key","commission_rate":"commission_rate","url":"https://eosforce.io"}' -p bpname
 ```
 
 <details>
 <summary>Example</summary>
 
 ```bash
-$ cleos push action eosio updatebp '{"bpname":"biosbpa","block_signing_key":"EOS7xTPgP8HxZZSUvuoyKaw4dNGGQPHbpGYzLCYKh6evSqBNxHsWr","commission_rate":"100"}' -p biosbpa
+$ cleos push action eosio updatebp '{"bpname":"biosbpa","block_signing_key":"EOS7xTPgP8HxZZSUvuoyKaw4dNGGQPHbpGYzLCYKh6evSqBNxHsWr","commission_rate":"100","url":"http://eosforce.io"}' -p biosbpa
 executed transaction: b3607a39c71cfe9a5926aae3cc0492bf76644c9bc55a02a5f16da549d0e1a208  160 bytes  4669 us
 #         eosio <= eosio::updatebp              {"bpname":"biosbpa","block_signing_key":"EOS7xTPgP8HxZZSUvuoyKaw4dNGGQPHbpGYzLCYKh6evSqBNxHsWr","com...
 warning: transaction executed locally, but may not be confirmed by the network yet
