@@ -9,12 +9,13 @@
             * [votes](#votes)
             * [bps](#bps)
             * [chainstatus](#chainstatus)
-            * [schudles](#schedules)
+            * [schedules](#schedules)
         * [eosio.token](#eosiotoken)
             * [accounts](#accounts-1)
             * [stat](#stat)
     * [Action](#action)
         * [eosio](#eosio-1)
+            * [create account](#create-account)
             * [transfer](#transfer)
             * [updatebp](#updatebp)
             * [vote](#vote)
@@ -385,15 +386,39 @@ Contract           | Action       | Transaction Fee (EOS)
 :----:             | :----:       | :----:
 eosio              | newaccount   | 0.1
 eosio              | updatebp     | 100
-eosio              | vote         | 0.01
+eosio              | vote         | 0.05
 eosio              | unfreeze     | 0.01
-eosio              | claim        | 0.01
+eosio              | claim        | 0.03
 eosio              | setemergency | 10
 eosio, eosio.token | transfer     | 0.01
 eosio.token        | create       | 10
 eosio.token        | issue        | 0.01
 
 #### eosio
+
+##### create account
+
+parameters:
+
+- `creator`
+- `new_account`
+- `pub_key`
+- `pub_key`
+
+```bash
+$ cleos create account creator new_account pub_key pub_key
+```
+
+<details>
+<summary>Example</summary>
+
+```bash
+$ cleos create account cindydaily laoma EOS5MFoVFWAkeZgjxMCBTDjhrxmNefFKSGZUbewH35tJGSqzaFRpU EOS5MFoVFWAkeZgjxMCBTDjhrxmNefFKSGZUbewH35tJGSqzaFRpU
+executed transaction: 70e2b9cb9ea977e42a70ea9a5f82bd68b420a777015d4624c558cd0a42a9225a  216 bytes  1132 us
+#         eosio <= eosio::newaccount            "00808fce249fa643000000000023a989010000000100023cc6babc9f5c042daf20052a2e9b74ca79de359085e4bb0748f67...
+warning: transaction executed locally, but may not be confirmed by the network yet
+```
+</details>
 
 ##### transfer
 
