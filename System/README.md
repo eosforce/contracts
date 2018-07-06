@@ -99,11 +99,12 @@ $ cleos get table eosio account_name votes --key bpname
 $ cleos get table eosio user1 votes
 {
   "rows": [{
-      "bpname": "biosbpa",
-      "staked": "100.0000 EOS",
-      "stake_time": "2018-06-04T05:12:42",
+      "bpname": "eosmasterbp",
+      "staked": "0.0000 EOS",
+      "voteage": 0,
+      "voteage_update_height": 400553,
       "unstaking": "0.0000 EOS",
-      "unstake_time": "2018-06-04T05:12:42"
+      "unstake_height": 212227
     }
   ],
   "more": false
@@ -250,6 +251,8 @@ $ cleos get table eosio eosio schedules -k version_num
 
 <details>
 <summary>Example</summary>
+
+```bash
 $ cleos get table eosio eosio schedules
 {
   "rows": [{
@@ -330,6 +333,7 @@ $ cleos get table eosio eosio schedules
   ],
   "more": false
 }
+```
 
 </details>
 
